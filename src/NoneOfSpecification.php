@@ -1,33 +1,24 @@
 <?php
 
-namespace Tanigami\Specification;
+declare(strict_types=1);
 
-/**
- * @template T
- * @extends Specification<T>
- */
+namespace Backendbase\Specification;
 class NoneOfSpecification extends Specification
 {
-    /**
-     * @var Specification<T>[]
-     */
-    private $specifications;
+    /** @var Specification[] */
+    private array $specifications;
 
-    /**
-     * @param Specification<T> ...$specifications
-     */
     public function __construct(Specification ...$specifications)
     {
         $this->specifications = $specifications;
     }
 
-    /**
-     * @param T $object
-     */
-    public function isSatisfiedBy($object): bool
-    {
+    public function isSatisfiedBy(
+        SpecificationObjectInterface $object,
+        SpecificationFailures|null &$failures = null
+    ): bool {
         foreach ($this->specifications as $specification) {
-            if ($specification->isSatisfiedBy($object)) {
+            if ($specification->isSatisfiedBy($object, $failures)) {
                 return false;
             }
         }
@@ -35,9 +26,7 @@ class NoneOfSpecification extends Specification
         return true;
     }
 
-    /**
-     * @return Specification<T>[]
-     */
+    /** @return Specification[] */
     public function specifications(): array
     {
         return $this->specifications;

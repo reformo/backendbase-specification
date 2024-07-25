@@ -1,33 +1,27 @@
 <?php
 
-namespace Tanigami\Specification;
+declare(strict_types=1);
 
-/**
- * @template T
- * @extends Specification<T>
- */
+namespace Backendbase\Specification;
+use function array_map;
+use function implode;
+
 class OneOfSpecification extends Specification
 {
-    /**
-     * @var Specification<T>[]
-     */
-    private $specifications;
+    /** @var Specification[] */
+    private array $specifications;
 
-    /**
-     * @param Specification<T> ...$specifications
-     */
     public function __construct(Specification ...$specifications)
     {
         $this->specifications = $specifications;
     }
 
-    /**
-     * @param T $object
-     */
-    public function isSatisfiedBy($object): bool
-    {
+    public function isSatisfiedBy(
+        SpecificationObjectInterface $object,
+        SpecificationFailures|null &$failures = null
+    ): bool {
         foreach ($this->specifications as $specification) {
-            if ($specification->isSatisfiedBy($object)) {
+            if ($specification->isSatisfiedBy($object, $failures)) {
                 return true;
             }
         }
@@ -41,13 +35,11 @@ class OneOfSpecification extends Specification
             static function (Specification $specification) use ($alias) {
                 return '(' . $specification->whereExpression($alias) . ')';
             },
-            $this->specifications
+            $this->specifications,
         ));
     }
 
-    /**
-     * @return Specification<T>[]
-     */
+    /** @return Specification[] */
     public function specifications(): array
     {
         return $this->specifications;

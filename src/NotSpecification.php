@@ -1,37 +1,21 @@
 <?php
 
-namespace Tanigami\Specification;
+declare(strict_types=1);
 
-/**
- * @template T
- * @extends Specification<T>
- */
+namespace Backendbase\Specification;
 class NotSpecification extends Specification
 {
-    /**
-     * @var Specification<T>
-     */
-    private $specification;
-
-    /**
-     * @param Specification<T> $specification
-     */
-    public function __construct(Specification $specification)
+    public function __construct(private Specification $specification)
     {
-        $this->specification = $specification;
     }
 
-    /**
-     * @param T $object
-     */
-    public function isSatisfiedBy($object): bool
-    {
-        return !$this->specification->isSatisfiedBy($object);
+    public function isSatisfiedBy(
+        SpecificationObjectInterface $object,
+        SpecificationFailures|null &$failures = null
+    ): bool {
+        return ! $this->specification->isSatisfiedBy($object, $failures);
     }
 
-    /**
-     * @return Specification<T>
-     */
     public function specification(): Specification
     {
         return $this->specification;

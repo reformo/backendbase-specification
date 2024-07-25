@@ -1,18 +1,22 @@
 <?php
 
-namespace Tanigami\Specification;
+namespace Backendbase\Test\Specification;
 
 use PHPUnit\Framework\TestCase;
-use stdClass;
-
+use Backendbase\Specification\AnyOfSpecification;
+use Backendbase\Specification\AndSpecification;
+use Backendbase\Specification\NoneOfSpecification;
+use Backendbase\Specification\OneOfSpecification;
+use Backendbase\Specification\OrSpecification;
 class SpecificationTest extends TestCase
 {
     public function testSpecification()
     {
+
         $trueSpec  = new BoolSpecification(true);
         $falseSpec = new BoolSpecification(false);
-        $this->assertTrue($trueSpec->isSatisfiedBy(new stdClass));
-        $this->assertFalse($falseSpec->isSatisfiedBy(new stdClass));
+        $this->assertTrue($trueSpec->isSatisfiedBy(new SpecificationTestObject()));
+        $this->assertFalse($falseSpec->isSatisfiedBy(new SpecificationTestObject()));
     }
 
     public function testNotSpecification()
@@ -21,8 +25,8 @@ class SpecificationTest extends TestCase
         $falseSpec = new BoolSpecification(false);
         $notTrueSpec  = $trueSpec->not();
         $notFalseSpec = $falseSpec->not();
-        $this->assertFalse($notTrueSpec->isSatisfiedBy(new stdClass));
-        $this->assertTrue($notFalseSpec->isSatisfiedBy(new stdClass));
+        $this->assertFalse($notTrueSpec->isSatisfiedBy(new SpecificationTestObject()));
+        $this->assertTrue($notFalseSpec->isSatisfiedBy(new SpecificationTestObject()));
     }
 
     public function testAndSpecification()
@@ -31,8 +35,8 @@ class SpecificationTest extends TestCase
         $falseSpec = new BoolSpecification(false);
         $trueAndTrueSpec  = $trueSpec->and($trueSpec);
         $trueAndFalseSpec = $trueSpec->and($falseSpec);
-        $this->assertTrue($trueAndTrueSpec->isSatisfiedBy(new stdClass));
-        $this->assertFalse($trueAndFalseSpec->isSatisfiedBy(new stdClass));
+        $this->assertTrue($trueAndTrueSpec->isSatisfiedBy(new SpecificationTestObject()));
+        $this->assertFalse($trueAndFalseSpec->isSatisfiedBy(new SpecificationTestObject()));
     }
 
     public function testOrSpecification()
@@ -41,32 +45,38 @@ class SpecificationTest extends TestCase
         $falseSpec = new BoolSpecification(false);
         $trueOrTrueSpec  = $trueSpec->or($trueSpec);
         $trueOrFalseSpec = $trueSpec->or($falseSpec);
-        $this->assertTrue($trueOrTrueSpec->isSatisfiedBy(new stdClass));
-        $this->assertTrue($trueOrFalseSpec->isSatisfiedBy(new stdClass));
+        $this->assertTrue($trueOrTrueSpec->isSatisfiedBy(new SpecificationTestObject()));
+        $this->assertTrue($trueOrFalseSpec->isSatisfiedBy(new SpecificationTestObject()));
     }
 
     public function testAnyOfSpecification()
     {
         $trueSpec  = new BoolSpecification(true);
         $falseSpec = new BoolSpecification(false);
-        $this->assertTrue((new AnyOfSpecification($trueSpec, $trueSpec, $trueSpec))->isSatisfiedBy(new stdClass));
-        $this->assertFalse((new AnyOfSpecification($trueSpec, $trueSpec, $falseSpec))->isSatisfiedBy(new stdClass));
+        $this->assertTrue((new AnyOfSpecification($trueSpec, $trueSpec, $trueSpec))
+            ->isSatisfiedBy(new SpecificationTestObject()));
+        $this->assertFalse((new AnyOfSpecification($trueSpec, $trueSpec, $falseSpec))
+            ->isSatisfiedBy(new SpecificationTestObject()));
     }
 
     public function testOneOfSpecification()
     {
         $trueSpec  = new BoolSpecification(true);
         $falseSpec = new BoolSpecification(false);
-        $this->assertFalse((new OneOfSpecification($falseSpec, $falseSpec, $falseSpec))->isSatisfiedBy(new stdClass));
-        $this->assertTrue((new OneOfSpecification($falseSpec, $falseSpec, $trueSpec))->isSatisfiedBy(new stdClass));
+        $this->assertFalse((new OneOfSpecification($falseSpec, $falseSpec, $falseSpec))
+            ->isSatisfiedBy(new SpecificationTestObject()));
+        $this->assertTrue((new OneOfSpecification($falseSpec, $falseSpec, $trueSpec))
+            ->isSatisfiedBy(new SpecificationTestObject()));
     }
 
     public function testNoneOfSpecification()
     {
         $trueSpec  = new BoolSpecification(true);
         $falseSpec = new BoolSpecification(false);
-        $this->assertTrue((new NoneOfSpecification($falseSpec, $falseSpec, $falseSpec))->isSatisfiedBy(new stdClass));
-        $this->assertFalse((new NoneOfSpecification($falseSpec, $falseSpec, $trueSpec))->isSatisfiedBy(new stdClass));
+        $this->assertTrue((new NoneOfSpecification($falseSpec, $falseSpec, $falseSpec))
+            ->isSatisfiedBy(new SpecificationTestObject()));
+        $this->assertFalse((new NoneOfSpecification($falseSpec, $falseSpec, $trueSpec))
+            ->isSatisfiedBy(new SpecificationTestObject()));
     }
 
     public function testCriteriaComposition()
@@ -85,31 +95,11 @@ class SpecificationTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     */
     public function testWhereExpressionIsNotSupported()
     {
+        $this->expectException(\BadMethodCallException::class);
         (new BoolSpecification(true))->not()->whereExpression('a');
     }
 }
 
-class BoolSpecification extends Specification
-{
-    private $bool;
 
-    public function __construct(bool $bool)
-    {
-        $this->bool = $bool;
-    }
-
-    public function isSatisfiedBy($object): bool
-    {
-        return $this->bool;
-    }
-
-    public function whereExpression(string $alias): string
-    {
-        return $this->bool ? '1' : '0';
-    }
-}
