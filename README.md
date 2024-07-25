@@ -1,9 +1,5 @@
 # PHP Specification
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tanigami/specification-php/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tanigami/specification-php/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/tanigami/specification-php/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/tanigami/specification-php/?branch=master)
-[![Build Status](https://scrutinizer-ci.com/g/tanigami/specification-php/badges/build.png?b=master)](https://scrutinizer-ci.com/g/tanigami/specification-php/build-status/master)
-
 Basic classes for [Specification pattern](https://en.wikipedia.org/wiki/Specification_pattern) in PHP. On top of the typical set of `and`, `or` and `not` specificaitons, `anyOf`, `oneOf`, `noneOf` specifications are proposed.
 
 This package is based on the implementation in [carlosbuenosvinos/ddd](https://github.com/dddinphp/ddd).
@@ -11,7 +7,7 @@ This package is based on the implementation in [carlosbuenosvinos/ddd](https://g
 ## Installation
 
 ```
-$ composer require tanigami/specification
+$ composer require reformo/backendbase-specification
 ```
 
 ## Usage example
@@ -19,8 +15,8 @@ $ composer require tanigami/specification
 ```php
 <?php
 
-use Tanigami\Specification\Specification;
-use Tanigami\Specification\OneOfSpecification;
+use Backendbase\Specification\Specification;
+use Backendbase\Specification\OneOfSpecification;
 
 class Order
 {
