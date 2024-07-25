@@ -11,7 +11,7 @@ class AnyOfSpecification extends Specification
     /** @var Specification[] */
     private array $specifications;
 
-    public function __construct(Specification ...$specifications)
+    public function __construct(SpecificationInterface ...$specifications)
     {
         $this->specifications = $specifications;
     }
@@ -40,7 +40,7 @@ class AnyOfSpecification extends Specification
         ));
     }
 
-    /** @return Specification[] */
+    /** @return SpecificationInterface[] */
     public function specifications(): array
     {
         return $this->specifications;

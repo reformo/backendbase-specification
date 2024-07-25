@@ -7,8 +7,10 @@ use function sprintf;
 
 class OrSpecification extends Specification
 {
-    public function __construct(private Specification $one, private Specification $other)
-    {
+    public function __construct(
+        private readonly SpecificationInterface $one,
+        private readonly SpecificationInterface $other
+    ) {
     }
 
     public function isSatisfiedBy(
@@ -27,12 +29,12 @@ class OrSpecification extends Specification
         );
     }
 
-    public function one(): Specification
+    public function one(): SpecificationInterface
     {
         return $this->one;
     }
 
-    public function other(): Specification
+    public function other(): SpecificationInterface
     {
         return $this->other;
     }

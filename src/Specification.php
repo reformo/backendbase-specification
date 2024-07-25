@@ -13,12 +13,12 @@ abstract class Specification implements SpecificationInterface
         throw new BadMethodCallException('Where expression is not supported');
     }
 
-    public function and(Specification $specification): AndSpecification
+    public function and(SpecificationInterface $specification): AndSpecification
     {
         return new AndSpecification($this, $specification);
     }
 
-    public function or(Specification $specification): OrSpecification
+    public function or(SpecificationInterface $specification): OrSpecification
     {
         return new OrSpecification($this, $specification);
     }

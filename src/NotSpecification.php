@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Backendbase\Specification;
 class NotSpecification extends Specification
 {
-    public function __construct(private Specification $specification)
+    public function __construct(private SpecificationInterface $specification)
     {
     }
 
@@ -16,7 +16,7 @@ class NotSpecification extends Specification
         return ! $this->specification->isSatisfiedBy($object, $failures);
     }
 
-    public function specification(): Specification
+    public function specification(): SpecificationInterface
     {
         return $this->specification;
     }

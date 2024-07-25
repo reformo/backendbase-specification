@@ -11,7 +11,7 @@ class OneOfSpecification extends Specification
     /** @var Specification[] */
     private array $specifications;
 
-    public function __construct(Specification ...$specifications)
+    public function __construct(SpecificationInterface ...$specifications)
     {
         $this->specifications = $specifications;
     }
@@ -32,14 +32,14 @@ class OneOfSpecification extends Specification
     public function whereExpression(string $alias): string
     {
         return implode(' OR ', array_map(
-            static function (Specification $specification) use ($alias) {
+            static function (SpecificationInterface $specification) use ($alias) {
                 return '(' . $specification->whereExpression($alias) . ')';
             },
             $this->specifications,
         ));
     }
 
-    /** @return Specification[] */
+    /** @return SpecificationInterface[] */
     public function specifications(): array
     {
         return $this->specifications;

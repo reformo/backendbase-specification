@@ -8,7 +8,7 @@ use function sprintf;
 
 class AndSpecification extends Specification
 {
-    public function __construct(private Specification $one, private Specification $other)
+    public function __construct(private SpecificationInterface $one, private SpecificationInterface $other)
     {
     }
 
@@ -37,12 +37,12 @@ class AndSpecification extends Specification
         );
     }
 
-    public function one(): Specification
+    public function one(): SpecificationInterface
     {
         return $this->one;
     }
 
-    public function other(): Specification
+    public function other(): SpecificationInterface
     {
         return $this->other;
     }
